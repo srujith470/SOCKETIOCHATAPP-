@@ -1,58 +1,49 @@
-const path = require("path"); // builtin module
-const express = require("express");
+const path = require('path');
+const http = require('http');
+const express = require('express');
 const socketIO = require('socket.io');
-const http = require('http') // built in module
-
-const port = process.env.PORT  || 3000
-const publicPath = path.join(__dirname + '/../public')
+const publicPath = path.join(__dirname, '../public');
+const port = process.env.PORT || 3000;
+const {genrateMessage} = require('../server/utils/message');
 var app = express();
 var server = http.createServer(app);
-var IO = socketIO(server);
-
-IO.on('connection', function(socket) {
-    console.log('A user connected');
-    
-    socket.on('createMessage', function(message) {
-        console.log('createMessage', message);
-        IO.emit('BroadcastMessage', {
-            from:message.from,
-            text:message.text,
-            createdAt: new Date().getDate
-        });
-    }); //LISTNER
-
-
-    //Whenever someone disconnects this piece of code executed
-    socket.on('disconnect', function () {
-       console.log('A user disconnected');
-    }); 
-
-    socket.on('recieveEmail', (newEmail) => {
-        console.log('recieveEmail', newEmail) // LISTMER
-    });
-    
-    socket.emit('newMessage', {
-        from: 'akshay',
-        text:'EMIT NEW MESSAGE',
-        createdAt: 12345678901
-    }); // EMITTER USER SENT EMAIL
-
-
-
-    socket.emit('newEmail', {
-        from: 'asdfgh@gmail.com',
-        text:'data from emitter',
-        createdAt: 12345
-    }); // EMITTER USER SENT EMAIL
-
- 
-});
- 
-
+var io = socketIO(server);
 app.use(express.static(publicPath));
+io.on('connection', (socket) => {
+  console.log('New user connected');
 
-server.listen(3000, () => {
-    console.log(`STARTING SERVER ON PORT ${port}`);
+  socket.emit('newMessage', {
+    from: 'Admin',
+    text: 'Welcome to the chat app',
+    createdAt: new Date().getTime()
+  });
+
+  socket.broadcast.emit('newMessage', {
+    from: 'Admin',
+    text: 'New user joined',
+    createdAt: new Date().getTime()
+  });
+
+  socket.on('createMessage2', (message) => {
+    console.log('createMessage2', message);
+    // io.emit('newMessage2', {
+    //   from: message.from,
+    //   text: message.text,
+    //   createdAt: new Date().getTime()
+    // });
+    
+     socket.broadcast.emit('newMessage2', {
+       from: message.from,
+       text: message.text,
+       createdAt: new Date().getTime()
+     });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User was disconnected');
+  });
 });
-//console.log(__dirname + '/../public'); // here public and  server are at same level so we use and go one level up
-console.log('this is absolute path :', + '\n' + publicPath); 
+
+server.listen(port, () => {
+  console.log(`Server is up on ${port}`);
+});
