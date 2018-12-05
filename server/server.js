@@ -12,17 +12,29 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log('New user connected');
 
-  socket.emit('newMessage', {
-    from: 'Admin',
-    text: 'Welcome to the chat app',
-    createdAt: new Date().getTime()
-  });
 
-  socket.broadcast.emit('newMessage', {
-    from: 'Admin',
-    text: 'New user joined',
-    createdAt: new Date().getTime()
-  });
+socket.on('createAckMessage',  (message, callback) => {
+  console.log('createAckMessage', message);
+  io.emit('newMessage', genrateMessage(message.from, message.text));
+  callback('this is from server');  
+});
+
+  // socket.emit('newMessage', {
+  //   from: 'Admin',
+  //   text: 'Welcome to the chat app',
+  //   createdAt: new Date().getTime()
+  // });
+
+  // socket.broadcast.emit('newMessage', {
+  //   from: 'Admin',
+  //   text: 'New user joined',
+  //   createdAt: new Date().getTime()
+  // });
+
+  socket.emit('newMessage', genrateMessage('Admin', 'WELCOME TO CHATAPP'));
+  socket.broadcast.emit('newMessage', genrateMessage('Admin', 'New User Joined'));
+
+
 
   socket.on('createMessage2', (message) => {
     console.log('createMessage2', message);
@@ -31,12 +43,13 @@ io.on('connection', (socket) => {
     //   text: message.text,
     //   createdAt: new Date().getTime()
     // });
-    
-     socket.broadcast.emit('newMessage2', {
-       from: message.from,
-       text: message.text,
-       createdAt: new Date().getTime()
-     });
+    //  socket.broadcast.emit('newMessage2', {
+    //    from: message.from,
+    //    text: message.text,
+    //    createdAt: new Date().getTime()
+    //  });
+     socket.broadcast.emit('newMessage2',
+     genrateMessage(message.from, message.text))
   });
 
   socket.on('disconnect', () => {

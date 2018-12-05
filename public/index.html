@@ -1,16 +1,26 @@
 <!DOCTYPE <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>CHAT APP</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script src="main.js"></script>
 </head>
+
 <body>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <header style="text-align: center">WELCOME TO CHAT APP</header>
+
+    <ol id = "messages"></ol>
+    <form id='message-form'>
+        <input name="message" , type="text" , placeholder="Type Message">
+        <button>Send</button>
+    </form>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="JS/index.js"></script> 
+    <script src="JS/index.js"></script>
 </body>
+
 </html>
