@@ -34,7 +34,10 @@ socket.on('createAckMessage',  (message, callback) => {
   socket.emit('newMessage', genrateMessage('Admin', 'WELCOME TO CHATAPP'));
   socket.broadcast.emit('newMessage', genrateMessage('Admin', 'New User Joined'));
 
-
+  socket.on('createLocationMessage', (coords) => {
+    io.emit('newMessage', 
+    genrateMessage('Admin', `${coords.latitude}, ${coords.longitude}`))
+  });
 
   socket.on('createMessage2', (message) => {
     console.log('createMessage2', message);
