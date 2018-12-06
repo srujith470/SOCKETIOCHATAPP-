@@ -4,7 +4,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
-const {genrateMessage} = require('../server/utils/message');
+const {genrateMessage, genrateLocationMessage} = require('../server/utils/message');
 var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
@@ -35,8 +35,8 @@ socket.on('createAckMessage',  (message, callback) => {
   socket.broadcast.emit('newMessage', genrateMessage('Admin', 'New User Joined'));
 
   socket.on('createLocationMessage', (coords) => {
-    io.emit('newMessage', 
-    genrateMessage('Admin', `${coords.latitude}, ${coords.longitude}`))
+    io.emit('newLocationMessage', 
+    genrateLocationMessage('Admin', coords.latitude, coords.longitude));
   });
 
   socket.on('createMessage2', (message) => {
