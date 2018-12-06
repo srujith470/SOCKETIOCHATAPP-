@@ -2,26 +2,37 @@
 <html>
 
 <head>
+    <link rel="stylesheet" href="./CSS/styles.css">
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>CHAT APP</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="main.js"></script>
 </head>
 
-<body>
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <header style="text-align: center">WELCOME TO CHAT APP</header>
+<body class="chat">
+    <div class="chat__sidebar">
+            <h1 style="text-align: center">WELCOME TO CHAT APP</h1>
 
-    <ol id = "messages"></ol>
-    <form id='message-form'>
-        <input name="message" , type="text" , placeholder="Type Message">
-        <button>Send</button>
-    </form>
-    <button id ="sendlocation">Send Location</button>
+        <h3>PEOPLE</h3>
+        <div id="users"> </div>
+    </div>
+
+    <div class="chat__main">
+        <ol id="messages" class="chat__messages"></ol>
+        <div class="chat__footer">
+            <form id='message-form'>
+                <input autofocus autocomplete="off" name="message" , type="text" , placeholder="Type Message">
+                <button>Send</button>
+            </form>
+            <button id="sendlocation">Send Location</button>
+        </div>
+    </div>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="JS/index.js"></script>
+    <script src="JS/libs/moment.min.js"></script>
 </body>
 
 </html>
