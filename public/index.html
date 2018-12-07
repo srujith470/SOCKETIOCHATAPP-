@@ -12,7 +12,7 @@
 
 <body class="chat">
     <div class="chat__sidebar">
-            <h1 style="text-align: center">WELCOME TO CHAT APP</h1>
+        <h1 style="text-align: center">WELCOME TO CHAT APP</h1>
 
         <h3>PEOPLE</h3>
         <div id="users"> </div>
@@ -28,11 +28,40 @@
             <button id="sendlocation">Send Location</button>
         </div>
     </div>
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script id="message-template" type="text/template">
 
+    <li class="message">
+      <div class="message__title">
+        <h4>{{from}}</h4>
+        <span>{{createdAt}}</span>
+     </div>
+     <div class="message__body">
+         <p>{{text}}</p>
+     </div>
+    </li>
+ </script>
+
+ <script id="location-message-template" type="text/template">
+
+    <li class="message">
+      <div class="message__title">
+        <h4>{{from}}</h4>
+        <span>{{createdAt}}</span>
+     </div>
+     <div class="message__body">
+         <p>
+             <a href="{{URL}}" target="_blank">My Current Location</a>
+         </p>
+     </div>
+    </li>
+ </script>
+
+
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="JS/index.js"></script>
     <script src="JS/libs/moment.min.js"></script>
+    <script src="JS/libs/mustache.js"></script>
 </body>
 
 </html>
