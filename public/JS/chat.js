@@ -12,7 +12,7 @@ function scrollToBottom () {
   var lastMessageHeight = newMessage.prev().innerHeight();
 
   if(clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
-    messages.scrollTop(scrollHeight);    
+    messages.scrollTop(scrollHeight)    
   }
 
 }
@@ -37,14 +37,10 @@ socket.on('newMessage', function (message) {
   jQuery('#messages').append(html);
   console.log('newMessage', message);
   scrollToBottom();
-
   // var li = jQuery('<li></li>');
   // li.text(`${message.from} ${FT}: ${message.text}`);
-
   // jQuery('#messages').append(li);
-
 });
-
   socket.on('newMessage2', function (message) {
   console.log('newMessage2', message);
   var FT = moment(message.createdAt).format('h:mm a');
@@ -56,15 +52,10 @@ socket.on('newMessage', function (message) {
   })
   jQuery('#messages').append(html);
   scrollToBottom();
-
-  
   // var li = jQuery('<li></li>');
   // li.text( `${message.from} ${FT}: ${message.text}`);
-
   // jQuery('#messages').append(li);
-
 });
-
 socket.on('newLocationMessage', function(message){
   var FT = moment(message.createdAt).format('h:mm a');
   var template = jQuery('#location-message-template').html();
