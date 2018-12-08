@@ -18,8 +18,18 @@ function scrollToBottom () {
 }
 
 socket.on('connect', function () {
+  var params = jQuery.deparam(window.location.search);
+  socket.emit('join', params, function(err) {
+    if(err){
+      alert(err)
+      window.location.href ='/';
+    } else{
+      console.log('No error')
+    }
+  });
+
   console.log('Connected to server');
-});
+});   // EMITTER TO JOIN WITH PARAMS REQUIRED
 
 socket.on('disconnect', function () {
   console.log('Disconnected from server');
@@ -76,12 +86,12 @@ socket.on('newLocationMessage', function(message){
 });
 
 
-socket.emit('createAckMessage', {
-  from:'frank Ack',
-  text:'Hi Ack',
-}, function(data){
-  console.log('Got it', data)
-}); 
+// socket.emit('createAckMessage', {
+//   from:'',
+//   text:'',
+// }, function(data){
+//   console.log('Got it', data)
+// }); 
 
 jQuery('#message-form').on('submit', function (e) {
   e.preventDefault();
@@ -92,7 +102,6 @@ jQuery('#message-form').on('submit', function (e) {
     text: messageTextbox.val()
   }, function () {
       messageTextbox.val('')
-
   });
 });
 

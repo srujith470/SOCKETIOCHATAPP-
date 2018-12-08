@@ -4,6 +4,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
+const {isRealString} = require('./utils/validation');
 const {genrateMessage, genrateLocationMessage} = require('../server/utils/message');
 var app = express();
 var server = http.createServer(app);
@@ -11,6 +12,24 @@ var io = socketIO(server);
 app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log('New user connected');
+
+  socket.on('join', (params, callback) => {
+    if(!isRealString(params.name) || !isRealString(params.room)){
+      callback('Name and room are Required');
+    } 
+
+    socket.join(params.room); 
+
+    socket.emit('newMessage', genrateMessage('Admin', 'WELCOME TO CHATAPP'));
+    socket.broadcast.to(params.room).emit('newMessage', genrateMessage('Admin', `${params.name} has joined`));
+  
+    // socket.leave() socket.join these two help to join or exit room. 
+    // here we use io.emit(target message to all users).io.to('ROOM NAME').emit
+    //socket.broadcast.emit (sends toevery one exept for current user). socket.broadcast.to('ROOM NAME').emit
+    // socket.emit to single targetted user
+    callback()
+
+  });
 
 
 socket.on('createAckMessage',  (message, callback) => {
@@ -31,8 +50,6 @@ socket.on('createAckMessage',  (message, callback) => {
   //   createdAt: new Date().getTime()
   // });
 
-  socket.emit('newMessage', genrateMessage('Admin', 'WELCOME TO CHATAPP'));
-  socket.broadcast.emit('newMessage', genrateMessage('Admin', 'New User Joined'));
 
   socket.on('createLocationMessage', (coords) => {
     io.emit('newLocationMessage', 
