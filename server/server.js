@@ -9,17 +9,24 @@ const {genrateMessage, genrateLocationMessage} = require('../server/utils/messag
 var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
+const {Users} = require('./utils/users');
+var users = new Users
+
 app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log('New user connected');
 
   socket.on('join', (params, callback) => {
     if(!isRealString(params.name) || !isRealString(params.room)){
-      callback('Name and room are Required');
+      return callback('Name and room are Required');
     } 
 
     socket.join(params.room); 
-
+    
+    users.removeUser(socket.id);
+    users.addUser(socket.id, params.name, params.room);
+    io.to(params.room).emit('updateUsersList', users.getUserList(params.room));
+    
     socket.emit('newMessage', genrateMessage('Admin', 'WELCOME TO CHATAPP'));
     socket.broadcast.to(params.room).emit('newMessage', genrateMessage('Admin', `${params.name} has joined`));
   
@@ -73,7 +80,13 @@ socket.on('createAckMessage',  (message, callback) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('User was disconnected');
+    var user = users.removeUser(socket.id);
+    if(user){
+      io.to(user.room).emit('updateUsersList', users.getUser(user.room));
+      io.to(user.room).emit('newMessage',genrateMessage('ADMIN',`${user.name} has left`));
+
+    }
+//    console.log('User was disconnected');
   });
 });
 

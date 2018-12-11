@@ -31,8 +31,19 @@ socket.on('connect', function () {
   console.log('Connected to server');
 });   // EMITTER TO JOIN WITH PARAMS REQUIRED
 
-socket.on('disconnect', function () {
+socket.on('disconnect',  () => {
   console.log('Disconnected from server');
+});
+
+socket.on('updateUsersList', users => {
+  var ol = jQuery('<ol></ol>');
+
+  users.forEach(function(user){
+    ol.append(jQuery('<li></li>').text(user));
+  });
+
+  jQuery('#users').html(ol);
+  //console.log('USERS LIST', users);
 });
 
 socket.on('newMessage', function (message) {
